@@ -13,10 +13,11 @@ class NeuralNetwork:
 
         self.hidden_layers = []
         
-        layer=0
-        while layer <= no_hidden_layers: #in xrange(no_hidden_layers):
+        #   layer=0
+        #   while layer <= no_hidden_layers: 
+        for layer in range(no_hidden_layers):
             self.hidden_layers.append(2 * random.random((no_nodes_in_hidden_layers, no_nodes_in_hidden_layers)) - 1)
-            layer += 1
+            #   layer += 1
 
         # the last layer are handled the same way as all the hidden layers,
         # that is why i appended it to the array of hidden layers
@@ -34,30 +35,32 @@ class NeuralNetwork:
         num_lines = 10
         devider = (traning_interations/num_lines)  #this will gives us 10 lines running through the interations 
         #
-        iteration = 0
-        while iteration <= traning_interations:
+        #   iteration = 0
+        #   while iteration <= traning_interations:
+        for iteration in range(traning_interations):
             # {
-            #put together input layer and all the hidden layers un one array, and predict the values from the inputs and weights
+            # put together input layer and all the hidden layers un one array,
+            # and predict the values from the inputs and weights
             layers = []
             layers.append(self.__sigmoid(dot(traning_inputs, self.input_layer)))
             for i in range(len(self.hidden_layers)):
                 layers.append(self.__sigmoid(dot(layers[-1], self.hidden_layers[i])))
-            
+            #
             # calculate the errors
-            errors = [] # from last layer to first
+            errors = []                         # from last layer to first
             errors.append((traning_outputs - layers[-1]).T)
             for i in reversed(range(len(self.hidden_layers))):
                 errors.append( dot(self.hidden_layers[i], errors[-1]) * self.__sigmoid_derivative(layers[i]).T)
-            errors = errors[::-1] # from first to last
-            
+            errors = errors[::-1]               # from first to last
+            #
             # adjust the weights (backpropagation)
             self.input_layer += dot(traning_inputs.T, errors[0].T)
             for i in range(len(self.hidden_layers)):
                 self.hidden_layers[i] += dot(layers[i].T, errors[i + 1].T)
             #            
-            if (iteration / devider) == 0:
+            if (iteration%devider) == 0:       # the remainder of the devision 
                 print('traning:',traning_interations, 'iteration:',iteration)
-            iteration += 1
+            #   iteration += 1
             # }
             
     # predict the outcome py passing the inputs through all the layers
@@ -89,6 +92,7 @@ print ('x:',x)
 for x in n_net.hidden_layers:
     print ('x[0]:',x[0])
     #print ('len(x[0]:',len(x[0])
+    #print ('Layer width: ',str(len(x))])
 
 #body
 print ("Train")
